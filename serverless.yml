@@ -1,0 +1,22 @@
+---
+service: demo
+provider:
+  name: aws
+  runtime: python3.8
+  memorySize: 128
+  stage: dev
+  region: us-east-1
+
+package:
+  exclude:
+    - README.md
+    - LICENSE
+
+functions:
+  hello:
+    description: Hello World!
+    handler: handler.hello
+    events:
+      - http:
+          path: hello
+          method: post
