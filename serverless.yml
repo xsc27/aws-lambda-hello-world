@@ -20,3 +20,10 @@ functions:
       - http:
           path: hello
           method: post
+  whoami:
+    description: Who Am I
+    handler: handler.whoami
+    events:
+      - http:
+          path: whoami
+          method: get

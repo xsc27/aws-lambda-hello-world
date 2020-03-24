@@ -3,7 +3,9 @@ import logging
 import os
 from urllib.parse import parse_qs
 
-_LOGGER = logging.getLogger()
+import boto3
+
+_LOGGER = logging.getLogger(__name__)
 _LOGGER.setLevel(logging.DEBUG)
 
 
@@ -36,9 +38,26 @@ def hello(event, context):
     return response
 
 
+def whoami(event, context):
+    log_stream(event, context)
+    body = {
+        "message": boto3.client("sts").get_caller_identity(),
+        "input": event,
+    }
+    response = {
+        "statusCode": 200,
+        "headers": {"Content-Type": "application/json"},
+        "body": body,
+    }
+
+    return response
+
+
 def log_stream(event, context):
     _LOGGER.debug("ENVIRONMENT VARIABLES: %s", os.environ)
 
+    _LOGGER.info("Function name: %s", context.function_name)
+    _LOGGER.info("Function version: %s", context.function_version)
     _LOGGER.info("Log stream name: %s", context.log_stream_name)
     _LOGGER.info("Log group name: %s", context.log_group_name)
     _LOGGER.info("Request ID: %s", context.aws_request_id)
